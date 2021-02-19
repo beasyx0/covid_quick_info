@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>{% block title %}Quick Covid Data{% endblock title %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Quick Covid Info">
+        <meta name="author" content="">
+        <!--<link rel="canonical" href="{{ canonical_path }}" />-->
+
+        {% block css %}
+        	<!-- Font Awesome -->
+			<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+			<!-- Bootstrap core CSS -->
+			<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+			<!-- Material Design Bootstrap -->
+			<link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/css/mdb.min.css" rel="stylesheet">
+			<link rel="stylesheet" href="{% static "css/index.css" %}">
+		{% endblock css %}
+    </head>
+    <body>
+    	{% if messages %}
+		      <div class="messages m-0 p-0 text-center w-100">
+		        {% for message in messages %}
+			        <p class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+			        	{{ message }}
+			        	<a class="ml-5 float-right" id="close-messages">X</a>
+			        </p>
+		        {% endfor %}
+		      </div>
+	    {% endif %}
+    	<div class="container main-container pt-4 pb-4">
+	    	{% block content %}{% endblock content %}
+	    </div>
+	    {% block javascript %}
+	    	<!-- JQuery -->
+			<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+			<!-- Bootstrap tooltips -->
+			<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+			<!-- Bootstrap core JavaScript -->
+			<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.min.js"></script>
+			<!-- MDB core JavaScript -->
+			<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/js/mdb.min.js"></script>
+
+			<script>
+				$('#close-messages').click(function(){
+					$('.messages').hide();
+				});
+			</script>
+			
+	    {% endblock javascript %}
+
+	    {% block extra_scripts %}{% endblock extra_scripts %}
+
+    </body>
+</html>

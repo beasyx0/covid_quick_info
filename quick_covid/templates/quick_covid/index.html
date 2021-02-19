@@ -1,0 +1,48 @@
+{% extends "quick_covid/base.html" %}
+
+{% block title %}Index{% endblock title %}
+
+{% load humanize %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+	<h1 class="text-center mb-5 text-light">Quick Covid Info</h1>
+
+	<h6 class="text-center text-light">Last Updated: {{ last_updated|timesince }} ago</h6>
+
+	<hr class="col-6 mb-5 bar">
+
+	<form action="." method="post" class="col-6 m-auto">
+		{% csrf_token %}
+		<legend class="text-center text-light">Pick A Country</legend>
+		<div class="form-group d-flex justify-content-ends">
+			{{ form|crispy }}
+			<button type="submit" class="sub-btn btn btn-outline-info btn-sm p-2 mt-0 ml-2 h-100 w-25"><span class="h6">View</span></button>
+		</div>
+	</form>
+
+	<div class="mb-5 mt-5">
+		<div class="card col-sm-12 col-md-12 col-lg-6 col-xl-6 m-auto loc-card">
+  			<div class="card-body">
+				<h2 class="text-light">{{ location.name }}</h2>
+				<ul style="font-size: 1.3em;" class="text-light">
+					<li>Total Cases: {{ location.cases_total|intcomma }}</li>
+					<li>Total Cases Per 100k: {{ location.cases_total_per_100k|intcomma }}</li>
+					<li>Newly Reported Cases Last 7d: {{ location.cases_newly_reported_last_7_days|intcomma }}</li>
+					<li>Newly Reported Cases Last 24hr: {{ location.cases_newly_reported_last_24_hours|intcomma }}</li>
+					<li>Total Deaths: {{ location.deaths_total|intcomma }}</li>
+					<li>Total Deaths Per 100k: {{ location.deaths_total_per_100k|intcomma }}</li>
+					<li>Newly Reported Deaths Last 7d: {{ location.deaths_newly_reported_last_7_days|intcomma }}</li>
+					<li>Newly Reported Deaths Last 24hr: {{ location.deaths_newly_reported_last_24_hours|intcomma }}</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<hr class="col-6 mb-5 bar">
+
+	
+
+{% endblock content %}

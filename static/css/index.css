@@ -1,0 +1,23 @@
+body {
+	background: #121212;
+}
+
+.sub-btn {
+	background: #333333;
+}
+
+.bar {
+	border: 1px solid #ffffff;
+	opacity: 60%;
+}
+
+.loc-card {
+	background: #333333;
+	box-shadow: 2px 2px 15px #33b5e5 ;
+}
+
+#id_location {
+	background: #333333;
+	color: #ffffff;
+	opacity: 80%;
+}
