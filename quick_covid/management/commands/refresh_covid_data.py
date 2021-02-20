@@ -17,8 +17,6 @@ class Command(BaseCommand):
 
 	def handle(self, *args, **options):
 
-		# raise CommandError('Ya dun fucked up')
-
 		df = pd.read_csv('https://covid19.who.int/WHO-COVID-19-global-table-data.csv')
 
 		df = df.fillna(0)
@@ -29,17 +27,17 @@ class Command(BaseCommand):
 				'Transmission Classification'], axis=1, inplace=True)
 
 		for i, row in df.iterrows():
-			obj, created = \
-				Location.objects.update_or_create(
-					name=row[0],
-					cases_total=int(row[1]),
-					cases_total_per_100k=int(row[2]),
-					cases_newly_reported_last_7_days=int(row[3]),
-					cases_newly_reported_last_24_hours=int(row[4]),
-					deaths_total=int(row[5]),
-					deaths_total_per_100k=int(row[6]),
-					deaths_newly_reported_last_7_days=int(row[7]),
-					deaths_newly_reported_last_24_hours=int(row[8])
-					)
+			obj, created = Location.objects.update_or_create(
+				name=row[0],
+				defaults={'cases_total': int(row[1]),
+						  'cases_total_per_100k': int(row[2]),
+						  'cases_newly_reported_last_7_days': int(row[3]),
+						  'cases_newly_reported_last_24_hours': int(row[4]),
+						  'deaths_total': int(row[5]),
+						  'deaths_total_per_100k': int(row[6]),
+						  'deaths_newly_reported_last_7_days': int(row[7]),
+						  'deaths_newly_reported_last_24_hours': int(row[8]),
+						  },
+						)
 
 			self.stdout.write(f'Successfully created {obj.name}' if created else f'Successfully updated {obj.name}')

@@ -8,12 +8,13 @@ from django.utils.timezone import localtime
 
 
 def index(request):
-    location = get_object_or_404(Location, name='Global')
     form = LocationSelectForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
             location = form.cleaned_data['location']
-    # last_updated = localtime(location.updated).strftime("%m/%d/%Y @ %H:%M:%S %p")
+    if request.method == 'GET':
+        location = get_object_or_404(Location, name='Global')
+        messages.success(request, f'Last updated: {localtime(location.updated).strftime("%m/%d/%Y @ %H:%M:%S %p")}')
     last_updated = location.updated
     context = {
         'location': location,
