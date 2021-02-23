@@ -8,41 +8,105 @@
 
 {% block content %}
 
-	<h1 class="text-center mb-5 text-light">Quick Covid Info</h1>
+	<a href="/"><h1 class="text-center mb-5 text-light">Quick Covid Info</h1></a>
 
 	<h6 class="text-center text-light">Last Updated: {{ last_updated|timesince }} ago</h6>
 
 	<hr class="col-6 mb-5 bar">
 
-	<form action="." method="post" class="col-6 m-auto">
+	<form action="." method="post" class="col-lg-8 m-auto">
 		{% csrf_token %}
 		<legend class="text-center text-light">Pick A Country</legend>
-		<div class="form-group d-flex justify-content-ends">
+		<div class="form-group text-center">
 			{{ form|crispy }}
-			<button type="submit" class="sub-btn btn btn-outline-info btn-sm p-2 mt-0 ml-2 h-100 w-25"><span class="h6">View</span></button>
+			<button type="submit" class="sub-btn btn btn-outline-primary btn-lg w-100"><span class="">View</span></button>
 		</div>
 	</form>
 
+	<div class="col-4 m-auto d-flex justify-content-center p-5">
+		<i class="fas fa-arrow-down text-light"></i>
+	</div>
+
 	<div class="mb-5 mt-5">
-		<div class="card col-sm-12 col-md-12 col-lg-6 col-xl-6 m-auto loc-card">
+		<div class="card loc-card col-lg-8 m-auto">
   			<div class="card-body">
-				<h2 class="text-light">{{ location.name }}</h2>
-				<ul style="font-size: 1.3em;" class="text-light">
-					<li>Total Cases: {{ location.cases_total|intcomma }}</li>
-					<li>Total Cases Per 100k: {{ location.cases_total_per_100k|intcomma }}</li>
-					<li>Newly Reported Cases Last 7d: {{ location.cases_newly_reported_last_7_days|intcomma }}</li>
-					<li>Newly Reported Cases Last 24hr: {{ location.cases_newly_reported_last_24_hours|intcomma }}</li>
-					<li>Total Deaths: {{ location.deaths_total|intcomma }}</li>
-					<li>Total Deaths Per 100k: {{ location.deaths_total_per_100k|intcomma }}</li>
-					<li>Newly Reported Deaths Last 7d: {{ location.deaths_newly_reported_last_7_days|intcomma }}</li>
-					<li>Newly Reported Deaths Last 24hr: {{ location.deaths_newly_reported_last_24_hours|intcomma }}</li>
-				</ul>
+				<h1 class="text-center text-light">{{ location.name }}</h1>
+			</div>
+		</div>
+	</div>
+
+	<div class="mb-5 mt-5">
+		<div class="card loc-card col-lg-8 m-auto">
+  			<div class="card-body text-center">
+				<h1 class="text-light">{{ location.cases_total|intcomma }}</h1>
+				<small class="text-light">total cases</small>
+			</div>
+		</div>
+	</div>
+
+	<div class="mb-5 mt-5">
+		<div class="card loc-card col-lg-8 m-auto">
+  			<div class="card-body text-center">
+				<h1 class="text-light">{{ location.cases_total_per_100k|intcomma }}</h1>
+				<small class="text-light">Total Cases Per 100k</small>
+			</div>
+		</div>
+	</div>
+
+	<div class="mb-5 mt-5">
+		<div class="card loc-card col-lg-8 m-auto">
+  			<div class="card-body text-center">
+				<h1 class="text-light">{{ location.cases_newly_reported_last_7_days|intcomma }}</h1>
+				<small class="text-light">Newly Reported Cases Last 7d</small>
+			</div>
+		</div>
+	</div>
+
+	<div class="mb-5 mt-5">
+		<div class="card loc-card col-lg-8 m-auto">
+  			<div class="card-body text-center">
+				<h1 class="text-light">{{ location.cases_newly_reported_last_24_hours|intcomma }}</h1>
+				<small class="text-light">Newly Reported Cases Last 24hr</small>
+			</div>
+		</div>
+	</div>
+
+	<div class="mb-5 mt-5">
+		<div class="card loc-card col-lg-8 m-auto">
+  			<div class="card-body text-center">
+				<h1 class="text-light">{{ location.deaths_total|intcomma }}</h1>
+				<small class="text-light">Total Deaths</small>
+			</div>
+		</div>
+	</div>
+
+	<div class="mb-5 mt-5">
+		<div class="card loc-card col-lg-8 m-auto">
+  			<div class="card-body text-center">
+				<h1 class="text-light">{{ location.deaths_total_per_100k|intcomma }}</h1>
+				<small class="text-light">Total Deaths Per 100k</small>
+			</div>
+		</div>
+	</div>
+
+	<div class="mb-5 mt-5">
+		<div class="card loc-card col-lg-8 m-auto">
+  			<div class="card-body text-center">
+				<h1 class="text-light">{{ location.deaths_newly_reported_last_7_days|intcomma }}</h1>
+				<small class="text-light">Newly Reported Deaths Last 7d</small>
+			</div>
+		</div>
+	</div>
+
+	<div class="mb-5 mt-5">
+		<div class="card loc-card col-lg-8 m-auto">
+  			<div class="card-body text-center">
+				<h1 class="text-light">{{ location.deaths_newly_reported_last_24_hours|intcomma }}</h1>
+				<small class="text-light">Newly Reported Deaths Last 24hr</small>
 			</div>
 		</div>
 	</div>
 
 	<hr class="col-6 mb-5 bar">
-
-	
 
 {% endblock content %}

@@ -8,7 +8,7 @@ from django.utils.timezone import localtime
 
 
 def index(request):
-    form = LocationSelectForm(request.POST or None)
+    form = LocationSelectForm(request.POST or None, initial='')
     if request.method == 'POST':
         if form.is_valid():
             location = form.cleaned_data['location']
