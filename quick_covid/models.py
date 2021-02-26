@@ -1,8 +1,10 @@
+import uuid
 from django.db import models
 from django.utils import timezone
 
 
 class TimeStamped(models.Model):
+    public_id = models.UUIDField(default=uuid.uuid4, editable=False)
     date = models.DateTimeField(editable=False, null=True)
     updated = models.DateTimeField(editable=False, null=True)
 
@@ -33,9 +35,3 @@ class Location(TimeStamped):
     class Meta:
         verbose_name_plural = 'Locations'
         ordering = ['name']
-
-    # TODO: Add model manager method to calculate total:
-    #                            cases_newly_reported_last_7_days,
-    #                            cases_newly_reported_last_24_hours
-    #                            deaths_newly_reported_last_7_days
-    #                            deaths_newly_reported_last_24_hours

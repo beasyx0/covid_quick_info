@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse
 from django.contrib import messages
 from quick_covid.models import Location
 from quick_covid.forms import LocationForm, LocationSelectForm
@@ -22,5 +23,3 @@ def index(request):
         'last_updated': last_updated,
     }
     return render(request, 'quick_covid/index.html', context)
-
-
