@@ -14,11 +14,25 @@
 
 	<hr class="col-6 mb-5 bar">
 
-	<form action="." method="post" class="col-lg-8 m-auto">
+	<!--<form action="." method="post" class="col-lg-8 m-auto" id="fetch-location-form">
 		{% csrf_token %}
 		<legend class="text-center text-light">Pick A Country</legend>
 		<div class="form-group">
 			{{ form|crispy }}
+			<button type="submit" class="sub-btn btn btn-outline-primary btn-lg w-100"><span class="">View</span></button>
+		</div>
+	</form>-->
+
+	<form action="." method="post" class="col-lg-8 m-auto" id="fetch-location-form">
+		{% csrf_token %}
+		<legend class="text-center text-light">Pick A Country</legend>
+		<div class="form-group">
+			<select name="location" class="select form-control" required="" id="id_location"> 
+				<option value="" selected="">---------</option> 
+				{% for loc in all_location_names %}
+					<option value="{{ loc.name }}">{{ loc.name }}</option> 
+				{% endfor %}
+			</select>
 			<button type="submit" class="sub-btn btn btn-outline-primary btn-lg w-100"><span class="">View</span></button>
 		</div>
 	</form>
@@ -30,7 +44,7 @@
 	<div class="mb-5 mt-5">
 		<div class="card loc-card col-lg-8 m-auto">
   			<div class="card-body">
-				<h1 class="text-center text-light">{{ location.name }}</h1>
+				<h1 id="location-name" class="text-center text-light">{{ location.name }}</h1>
 			</div>
 		</div>
 	</div>
@@ -38,7 +52,7 @@
 	<div class="mb-5 mt-5">
 		<div class="card loc-card col-lg-8 m-auto">
   			<div class="card-body text-center">
-				<h1 class="text-light">{{ location.cases_total|intcomma }}</h1>
+				<h1 id="location-cases-total" class="text-light">{{ location.cases_total|intcomma }}</h1>
 				<small class="text-light">total cases</small>
 			</div>
 		</div>
@@ -47,7 +61,7 @@
 	<div class="mb-5 mt-5">
 		<div class="card loc-card col-lg-8 m-auto">
   			<div class="card-body text-center">
-				<h1 class="text-light">{{ location.cases_total_per_100k|intcomma }}</h1>
+				<h1 id="location-cases-per-100k" class="text-light">{{ location.cases_total_per_100k|intcomma }}</h1>
 				<small class="text-light">Total Cases Per 100k</small>
 			</div>
 		</div>
@@ -56,7 +70,7 @@
 	<div class="mb-5 mt-5">
 		<div class="card loc-card col-lg-8 m-auto">
   			<div class="card-body text-center">
-				<h1 class="text-light">{{ location.cases_newly_reported_last_7_days|intcomma }}</h1>
+				<h1 id="location-cases-last-7" class="text-light">{{ location.cases_newly_reported_last_7_days|intcomma }}</h1>
 				<small class="text-light">Newly Reported Cases Last 7d</small>
 			</div>
 		</div>
@@ -65,7 +79,7 @@
 	<div class="mb-5 mt-5">
 		<div class="card loc-card col-lg-8 m-auto">
   			<div class="card-body text-center">
-				<h1 class="text-light">{{ location.cases_newly_reported_last_24_hours|intcomma }}</h1>
+				<h1 id="location-cases-last-24" class="text-light">{{ location.cases_newly_reported_last_24_hours|intcomma }}</h1>
 				<small class="text-light">Newly Reported Cases Last 24hr</small>
 			</div>
 		</div>
@@ -74,7 +88,7 @@
 	<div class="mb-5 mt-5">
 		<div class="card loc-card col-lg-8 m-auto">
   			<div class="card-body text-center">
-				<h1 class="text-light">{{ location.deaths_total|intcomma }}</h1>
+				<h1 id="location-deaths-total" class="text-light">{{ location.deaths_total|intcomma }}</h1>
 				<small class="text-light">Total Deaths</small>
 			</div>
 		</div>
@@ -83,7 +97,7 @@
 	<div class="mb-5 mt-5">
 		<div class="card loc-card col-lg-8 m-auto">
   			<div class="card-body text-center">
-				<h1 class="text-light">{{ location.deaths_total_per_100k|intcomma }}</h1>
+				<h1 id="location-deaths-per-100k" class="text-light">{{ location.deaths_total_per_100k|intcomma }}</h1>
 				<small class="text-light">Total Deaths Per 100k</small>
 			</div>
 		</div>
@@ -92,7 +106,7 @@
 	<div class="mb-5 mt-5">
 		<div class="card loc-card col-lg-8 m-auto">
   			<div class="card-body text-center">
-				<h1 class="text-light">{{ location.deaths_newly_reported_last_7_days|intcomma }}</h1>
+				<h1 id="location-deaths-last-7" class="text-light">{{ location.deaths_newly_reported_last_7_days|intcomma }}</h1>
 				<small class="text-light">Newly Reported Deaths Last 7d</small>
 			</div>
 		</div>
@@ -101,7 +115,7 @@
 	<div class="mb-5 mt-5">
 		<div class="card loc-card col-lg-8 m-auto">
   			<div class="card-body text-center">
-				<h1 class="text-light">{{ location.deaths_newly_reported_last_24_hours|intcomma }}</h1>
+				<h1 id="location-deaths-last-24" class="text-light">{{ location.deaths_newly_reported_last_24_hours|intcomma }}</h1>
 				<small class="text-light">Newly Reported Deaths Last 24hr</small>
 			</div>
 		</div>
@@ -109,9 +123,57 @@
 
 	<hr class="col-6 mb-5 bar">
 
+	<button id="fetch-location" class="btn btn-outline-primary" name="{{ location.public_id }}">fetch location</button>
+
 {% endblock content %}
 
 
 {% block extra_scripts %}
+<script>
+$(document).ready(function () {
+  $('#fetch-location').click(function(){
+    $.ajax({
+      type: "POST",
+      url: "{% url 'quick_covid:fetch-location' %}",
+      dataType: "json",
+      data: {'public_id': $(this).attr('name'), 'csrfmiddlewaretoken': '{{csrf_token}}'},
+      success: function (response) {
+        alert(response.deaths_newly_reported_last_24_hours);
+      },
+      error: function (response) {
+        alert('no')
+      }
+    });
+    return false;
+  });
+});
+</script>
+
+<script>
+  $(document).ready(function () {
+    $('#fetch-location-form').submit(function () {
+      $.ajax({
+        data: $(this).serialize(),
+        type: 'POST',
+        url: "{% url 'quick_covid:fetch-location-2' %}",
+        success: function (response) {
+        	$('#location-name').empty().append(response.name);
+        	$('#location-cases-total').empty().append(response.cases_total);
+        	$('#location-cases-per-100k').empty().append(response.cases_total_per_100k);
+        	$('#location-cases-last-7').empty().append(response.cases_newly_reported_last_7_days);
+        	$('#location-cases-last-24').empty().append(response.cases_newly_reported_last_24_hours);
+        	$('#location-deaths-total').empty().append(response.deaths_total);
+        	$('#location-deaths-per-100k').empty().append(response.deaths_total_per_100k);
+        	$('#location-deaths-last-7').empty().append(response.deaths_newly_reported_last_7_days);
+        	$('#location-deaths-last-24').empty().append(response.deaths_newly_reported_last_24_hours);
+        },
+        error: function (response) {
+        	alert('nope');
+        }
+      });
+      return false;
+    });
+  });
+</script>
 
 {% endblock extra_scripts %}
