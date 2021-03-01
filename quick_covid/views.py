@@ -1,3 +1,4 @@
+import re
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.contrib import messages
@@ -10,13 +11,12 @@ from django.utils.timezone import localtime
 
 def index(request):
     all_location_names = Location.objects.values('name')
+    location = get_object_or_404(Location, name='Global')
     form = LocationSelectForm(request.POST or None, initial='')
     if request.method == 'POST':
         if form.is_valid():
             location = form.cleaned_data['location']
-    if request.method == 'GET':
-        location = get_object_or_404(Location, name='Global')
-        messages.success(request, f'Last updated: {localtime(location.updated).strftime("%m/%d/%Y @ %H:%M:%S %p")}')
+    messages.success(request, f'Last updated: {localtime(location.updated).strftime("%m/%d/%y %I:%M %p")}')
     last_updated = location.updated
     context = {
         'all_location_names': all_location_names,
@@ -27,27 +27,6 @@ def index(request):
     return render(request, 'quick_covid/index.html', context)
 
 
-def fetch_location(request):
-    if request.method == 'POST' and request.is_ajax():
-        public_id = request.POST.get('public_id', None)
-        location = get_object_or_404(Location, public_id=public_id)
-        res = {
-            'name': location.name,
-            'cases_total': location.cases_total,
-            'cases_total_per_100k': location.cases_total_per_100k,
-            'cases_newly_reported_last_7_days': location.cases_newly_reported_last_7_days,
-            'cases_newly_reported_last_24_hours': location.cases_newly_reported_last_24_hours,
-            'deaths_total': location.deaths_total,
-            'deaths_total_per_100k': location.deaths_total_per_100k,
-            'deaths_newly_reported_last_7_days': location.deaths_newly_reported_last_7_days,
-            'deaths_newly_reported_last_24_hours': location.deaths_newly_reported_last_24_hours,
-        }
-        return JsonResponse(res, status=200)
-    else:
-        return HttpResponseBadRequest()
-
-
-import re
 def my_intcomma(value):
     """
     Convert an integer to a string containing commas every three digits.
@@ -62,7 +41,7 @@ def my_intcomma(value):
         return my_intcomma(new)
 
 
-def fetch_location_2(request):
+def fetch_location(request):
     if request.method == 'POST' and request.is_ajax():
         location_name = request.POST.get('location')
         location = get_object_or_404(Location, name=location_name)
@@ -83,3 +62,14 @@ def fetch_location_2(request):
 
 
 
+def fetch_deaths(request):
+    labels = []
+    data = []
+    locations = Location.objects.values().exclude(name='Global').order_by('-deaths_total')[:10]
+    for loc in locations:
+        labels.append(loc['name'])
+        data.append(loc['deaths_total'])
+    return JsonResponse(data={
+                            'labels': labels,
+                            'data': data,
+                        })
