@@ -10,6 +10,7 @@ from django.utils.timezone import localtime
 
 
 def index(request):
+    '''Main view for quick covid'''
     all_location_names = Location.objects.values('name')
     location = get_object_or_404(Location, name='Global')
     form = LocationSelectForm(request.POST or None, initial='')
@@ -42,10 +43,12 @@ def my_intcomma(value):
 
 
 def fetch_location(request):
+    '''Function to return a Location object from an AJAX call'''
     if request.method == 'POST' and request.is_ajax():
         location_name = request.POST.get('location')
         location = get_object_or_404(Location, name=location_name)
         res = {
+            'country_image_html': location.get_flag_image_html(),
             'name': location.name,
             'cases_total': my_intcomma(location.cases_total),
             'cases_total_per_100k': my_intcomma(location.cases_total_per_100k),
@@ -63,6 +66,7 @@ def fetch_location(request):
 
 
 def fetch_deaths(request):
+    '''Function that return values for use with Chart.js charts'''
     labels = []
     data = []
     locations = Location.objects.values().exclude(name='Global').order_by('-deaths_total')[:10]

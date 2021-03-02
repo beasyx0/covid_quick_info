@@ -38,6 +38,14 @@
 
 	<div class="mb-5 mt-5">
 		<div class="card loc-card col-lg-8 m-auto">
+  			<div id="location-image-container" class="card-body">
+				{{ location.get_flag_image_html|safe }}
+			</div>
+		</div>
+	</div>
+
+	<div class="mb-5 mt-5">
+		<div class="card loc-card col-lg-8 m-auto">
   			<div class="card-body text-center">
 				<h1 id="location-cases-total" class="text-light">{{ location.cases_total|intcomma }}</h1>
 				<small class="text-light">total cases</small>
@@ -111,7 +119,7 @@
 	<hr class="col-6 mb-5 bar">
 
 
-  <div id="container">
+  <div id="container" class="mt-5 mb-5 pt-5">
     <canvas id="death-chart" data-url="{% url 'quick_covid:fetch-deaths' %}"></canvas>
   </div>
 
@@ -163,6 +171,7 @@
 
 
 <script>
+  // Function to fetch a location object and insert the values into the dom
   $(document).ready(function () {
     $('#fetch-location-form').submit(function () {
       $.ajax({
@@ -170,6 +179,7 @@
         type: 'POST',
         url: "{% url 'quick_covid:fetch-location' %}",
         success: function (response) {
+        	$('#location-image-container').empty().append(response.country_image_html);
         	$('#location-name').empty().append(response.name);
         	$('#location-cases-total').empty().append(response.cases_total);
         	$('#location-cases-per-100k').empty().append(response.cases_total_per_100k);

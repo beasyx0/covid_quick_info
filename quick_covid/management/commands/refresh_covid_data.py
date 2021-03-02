@@ -29,7 +29,8 @@ class Command(BaseCommand):
 		for i, row in df.iterrows():
 			obj, created = Location.objects.update_or_create(
 				name=row[0],
-				defaults={'cases_total': int(row[1]),
+				defaults={
+						  'cases_total': int(row[1]),
 						  'cases_total_per_100k': int(row[2]),
 						  'cases_newly_reported_last_7_days': int(row[3]),
 						  'cases_newly_reported_last_24_hours': int(row[4]),
