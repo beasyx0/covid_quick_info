@@ -14,9 +14,9 @@ def index(request):
     all_location_names = Location.objects.values('name')
     location = get_object_or_404(Location, name='Global')
     form = LocationSelectForm(request.POST or None, initial='')
-    if request.method == 'POST':
-        if form.is_valid():
-            location = form.cleaned_data['location']
+    # if request.method == 'POST':
+    #     if form.is_valid():
+    #         location = form.cleaned_data['location']
     messages.success(request, f'Last updated: {localtime(location.updated).strftime("%m/%d/%y %I:%M %p")}')
     last_updated = location.updated
     context = {
@@ -65,7 +65,7 @@ def fetch_location(request):
 
 
 
-def fetch_deaths(request):
+def fetch_most_deaths(request):
     '''Function that return values for use with Chart.js charts'''
     labels = []
     data = []
@@ -73,6 +73,20 @@ def fetch_deaths(request):
     for loc in locations:
         labels.append(loc['name'])
         data.append(loc['deaths_total'])
+    return JsonResponse(data={
+                            'labels': labels,
+                            'data': data,
+                        })
+
+
+def fetch_most_deaths_last_day(request):
+    '''Function that returns the top 10 most deaths in the last 24hr'''
+    labels = []
+    data = []
+    locations = Location.objects.values().exclude(name='Global').order_by('-deaths_newly_reported_last_24_hours')[:10]
+    for loc in locations:
+        labels.append(loc['name'])
+        data.append(loc['deaths_newly_reported_last_24_hours'])
     return JsonResponse(data={
                             'labels': labels,
                             'data': data,

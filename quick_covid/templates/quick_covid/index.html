@@ -119,9 +119,17 @@
 	<hr class="col-6 mb-5 bar">
 
 
-  <div id="container" class="mt-5 mb-5 pt-5">
-    <canvas id="death-chart" data-url="{% url 'quick_covid:fetch-deaths' %}"></canvas>
+  <div id="container" class="mt-5 mb-5 pt-5" style="min-width:600px;">
+    <canvas id="most-death-chart" data-url="{% url 'quick_covid:fetch-most-deaths' %}"></canvas>
   </div>
+
+  <hr class="col-6 mb-5 bar">
+
+  <div id="container" class="mt-5 mb-5 pt-5" style="min-width:600px;">
+    <canvas id="most-death-last-24-chart" data-url="{% url 'quick_covid:fetch-most-deaths-last-day' %}"></canvas>
+  </div>
+
+  <hr class="col-6 mb-5 bar">
 
 {% endblock content %}
 
@@ -133,7 +141,7 @@
 
 	$(function () {
 
-	  var $populationChart = $("#death-chart");
+	  var $populationChart = $("#most-death-chart");
 	  $.ajax({
 	    url: $populationChart.data("url"),
 	    success: function (data) {
@@ -157,7 +165,47 @@
 	          },
 	          title: {
 	            display: true,
-	            text: 'Top 10 Most Deaths Globally'
+	            text: 'Most Deaths Top 10'
+	          }
+	        }
+	      });
+
+	    }
+	  });
+
+	});
+
+</script>
+
+<script>
+
+	$(function () {
+
+	  var $populationChart = $("#most-death-last-24-chart");
+	  $.ajax({
+	    url: $populationChart.data("url"),
+	    success: function (data) {
+
+	      var ctx = $populationChart[0].getContext("2d");
+
+	      new Chart(ctx, {
+	        type: 'bar',
+	        data: {
+	          labels: data.labels,
+	          datasets: [{
+	            label: 'deaths',
+	            backgroundColor: 'blue',
+	            data: data.data
+	          }]          
+	        },
+	        options: {
+	          responsive: true,
+	          legend: {
+	            position: 'top',
+	          },
+	          title: {
+	            display: true,
+	            text: 'Most Deaths Top 10 last 24hr'
 	          }
 	        }
 	      });
